@@ -25,10 +25,12 @@
     {:project project :branch nil}    (.. "__projects." project)
     {:project project :branch branch} (.. "__projects." project ".branches." branch)))
 
-
 (fn M.list-path-root? []
   "Are we at the root (`/`)?"
   (= M.list-path []))
+
+(fn M.get-branch []
+  (if (= M.project-branch nil) nil (. M.project-branch :branch)))
 
 (fn M.list-path-get []
   (table.concat M.list-path "."))

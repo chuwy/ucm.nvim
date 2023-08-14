@@ -31,8 +31,8 @@ M.colored = function(s, tag)
 end
 M.segments = function(segments)
   local function _1_(acc, cur)
-    _G.assert((nil ~= cur), "Missing argument cur on /Users/chuwy/workspace/ucm.nvim/fnl/ucm/render.fnl:50")
-    _G.assert((nil ~= acc), "Missing argument acc on /Users/chuwy/workspace/ucm.nvim/fnl/ucm/render.fnl:50")
+    _G.assert((nil ~= cur), "Missing argument cur on /Users/chuwy/workspace/ucm.nvim/fnl/ucm/render.fnl:49")
+    _G.assert((nil ~= acc), "Missing argument acc on /Users/chuwy/workspace/ucm.nvim/fnl/ucm/render.fnl:49")
     local _2_ = cur
     if ((_G.type(_2_) == "table") and ((_2_).segment == "\n")) then
       return vim.list_extend(acc, {""})

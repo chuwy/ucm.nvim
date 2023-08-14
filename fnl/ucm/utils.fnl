@@ -7,6 +7,8 @@
 (fn M.notify [x]
   ((require "notify") (vim.inspect x)))
 
+(fn strip-prefix [seg prefix]
+  (if (= prefix nil) seg (if (M.starts-with seg (.. prefix ".")) (seg:sub (+ (length prefix) 1)) seg)))
 
  (fn M.starts-with [s suffix]
   "Check if string s ends with a suffix"

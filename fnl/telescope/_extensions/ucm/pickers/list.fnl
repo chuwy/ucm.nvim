@@ -19,9 +19,9 @@
 (fn insert [bufnr item]
   (actions.close bufnr)
   (match item {:value {:tag "TermObject" :contents { :termName name :termHash hash }}}
-                (vim.api.nvim_put (render.term (model.get-term name hash)) "" false true)
+                (vim.api.nvim_put (render.term (model.get-term name hash (ucm-state.list-path-get))) "" false true)
               {:value {:tag "TypeObject" :contents { :typeName name :typeHash hash }}}
-                (vim.api.nvim_put (render.type (model.get-type name hash)) "" false true)
+                (vim.api.nvim_put (render.type (model.get-type name hash (ucm-state.list-path-get))) "" false true)
                other (utils.notify other)))
 
 (fn handle [current_picker finder bufnr item] 

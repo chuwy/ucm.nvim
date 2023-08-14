@@ -19,7 +19,6 @@
   :SubnamespaceSize "󱞪"
 })
 
-
 ;; Everything related to rendering terms and types
 (local M {})
 

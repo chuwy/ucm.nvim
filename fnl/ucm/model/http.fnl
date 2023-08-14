@@ -18,8 +18,8 @@
   (do (request (..  "definitions/terms/by-hash/" (utils.strip-hash hash) "/summary"))))
 (fn M.get-type [hash]
   (request (..  "definitions/types/by-hash/" (utils.strip-hash hash) "/summary")) )
-(fn M.get-definition [fqn]
-  (request "getDefinition" {:names fqn}) )
+(fn M.get-definition [fqn relative-to]
+  (request "getDefinition" {:names fqn :relativeTo relative-to}) )
 
 (fn M.projects []
   (request :projects))
