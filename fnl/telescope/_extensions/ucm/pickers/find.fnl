@@ -19,7 +19,7 @@
 (fn insert [bufnr item]
   (actions.close bufnr)
   (match item {:namedTerm {:termName name :termHash hash}}
-                (vim.api.nvim_put (render.term (model.get-term name hash (ucm-state.list-path-get))) "" false true)
+                (vim.api.nvim_put (render.term (model.get-term name hash (ucm-state.get-relative-to))) "" false true)
               {:namedType {:typeName name :typeHash hash}}
                 (vim.api.nvim_put (render.type (model.get-type name hash (ucm-state.list-path-get))) "" false true)
                other (utils.notify other)))

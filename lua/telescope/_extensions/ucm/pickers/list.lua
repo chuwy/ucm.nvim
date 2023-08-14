@@ -19,11 +19,11 @@ local function insert(bufnr, item)
   if ((_G.type(_1_) == "table") and ((_G.type((_1_).value) == "table") and (((_1_).value).tag == "TermObject") and ((_G.type(((_1_).value).contents) == "table") and (nil ~= (((_1_).value).contents).termName) and (nil ~= (((_1_).value).contents).termHash)))) then
     local name = (((_1_).value).contents).termName
     local hash = (((_1_).value).contents).termHash
-    return vim.api.nvim_put(render.term(model["get-term"](name, hash, ucm_state["list-path-get"]())), "", false, true)
+    return vim.api.nvim_put(render.term(model["get-term"](name, hash, ucm_state["get-relative-to"]())), "", false, true)
   elseif ((_G.type(_1_) == "table") and ((_G.type((_1_).value) == "table") and (((_1_).value).tag == "TypeObject") and ((_G.type(((_1_).value).contents) == "table") and (nil ~= (((_1_).value).contents).typeName) and (nil ~= (((_1_).value).contents).typeHash)))) then
     local name = (((_1_).value).contents).typeName
     local hash = (((_1_).value).contents).typeHash
-    return vim.api.nvim_put(render.type(model["get-type"](name, hash, ucm_state["list-path-get"]())), "", false, true)
+    return vim.api.nvim_put(render.type(model["get-type"](name, hash, ucm_state["get-relative-to"]())), "", false, true)
   elseif (nil ~= _1_) then
     local other = _1_
     return utils.notify(other)
