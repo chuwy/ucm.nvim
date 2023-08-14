@@ -13,17 +13,21 @@ local render = require("ucm.render")
 local ucm_state = require("ucm.state")
 local utils = require("ucm.utils")
 local display_items = {{width = 1}, {width = 48}, {remaining = true}}
+local function run(get_fn, name, hash, render_fn)
+  vim.cmd("norm! ggO")
+  return vim.api.nvim_put(render_fn(get_fn(name, hash, ucm_state["get-relative-to"]())), "", false, true)
+end
 local function insert(bufnr, item)
   actions.close(bufnr)
   local _1_ = item
   if ((_G.type(_1_) == "table") and ((_G.type((_1_).value) == "table") and (((_1_).value).tag == "TermObject") and ((_G.type(((_1_).value).contents) == "table") and (nil ~= (((_1_).value).contents).termName) and (nil ~= (((_1_).value).contents).termHash)))) then
     local name = (((_1_).value).contents).termName
     local hash = (((_1_).value).contents).termHash
-    return vim.api.nvim_put(render.term(model["get-term"](name, hash, ucm_state["get-relative-to"]())), "", false, true)
+    return run(model["get-term"], name, hash, render.term)
   elseif ((_G.type(_1_) == "table") and ((_G.type((_1_).value) == "table") and (((_1_).value).tag == "TypeObject") and ((_G.type(((_1_).value).contents) == "table") and (nil ~= (((_1_).value).contents).typeName) and (nil ~= (((_1_).value).contents).typeHash)))) then
     local name = (((_1_).value).contents).typeName
     local hash = (((_1_).value).contents).typeHash
-    return vim.api.nvim_put(render.type(model["get-type"](name, hash, ucm_state["get-relative-to"]())), "", false, true)
+    return run(model["get-type"], name, hash, render.type)
   elseif (nil ~= _1_) then
     local other = _1_
     return utils.notify(other)
@@ -53,7 +57,7 @@ local displayer = entry_display.create({separator = " ", items = display_items})
 local function make_display(entry)
   return displayer(payloads["get-list-entry-display"](entry.value))
 end
-local function list_entry_maker(item)
+local function entry_maker(item)
   return {value = item, display = make_display, ordinal = payloads["get-list-entry-name"](item)}
 end
 local function attach_mappings(bufnr, _)
@@ -77,6 +81,6 @@ M.picker = function(opts)
     return payloads["from-list-root-payload"](http.list(ucm_state["list-path-get"]()))
   end
   get = _7_
-  return pickers.new(opts0, {prompt_title = "Namespaces", finder = finders.new_dynamic({fn = get, entry_maker = list_entry_maker}), attach_mappings = attach_mappings, sorter = conf.generic_sorter(opts0)})
+  return pickers.new(opts0, {prompt_title = "Namespaces", finder = finders.new_dynamic({fn = get, entry_maker = entry_maker}), attach_mappings = attach_mappings, sorter = conf.generic_sorter(opts0)})
 end
 return M

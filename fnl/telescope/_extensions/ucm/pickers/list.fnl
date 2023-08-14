@@ -16,12 +16,16 @@
 
 (local display-items [ { :width 1 } {:width 48} { :remaining true } ])
 
+(fn run [get-fn name hash render-fn]
+  (vim.cmd "norm! ggO")
+  (vim.api.nvim_put (render-fn (get-fn name hash (ucm-state.get-relative-to))) "" false true))
+
 (fn insert [bufnr item]
   (actions.close bufnr)
   (match item {:value {:tag "TermObject" :contents { :termName name :termHash hash }}}
-                (vim.api.nvim_put (render.term (model.get-term name hash (ucm-state.get-relative-to))) "" false true)
+                (run model.get-term name hash render.term)
               {:value {:tag "TypeObject" :contents { :typeName name :typeHash hash }}}
-                (vim.api.nvim_put (render.type (model.get-type name hash (ucm-state.get-relative-to))) "" false true)
+                (run model.get-type name hash render.type)
                other (utils.notify other)))
 
 (fn handle [current_picker finder bufnr item] 
@@ -37,7 +41,7 @@
 (fn make-display [entry]
   (displayer (payloads.get-list-entry-display (. entry :value))))
 
-(fn list-entry-maker [item]
+(fn entry-maker [item]
   { :value item :display make-display :ordinal (payloads.get-list-entry-name item) }) 
 
 (fn attach-mappings [bufnr _]
@@ -57,7 +61,7 @@
   (let [opts (or opts {})
         get (lambda [] (payloads.from-list-root-payload (http.list (ucm-state.list-path-get))))]
        (pickers.new opts {:prompt_title "Namespaces"
-                          :finder (finders.new_dynamic { :fn get :entry_maker list-entry-maker })
+                          :finder (finders.new_dynamic { :fn get :entry_maker entry-maker })
                           :attach_mappings attach-mappings
                           :sorter (conf.generic_sorter opts) })))
 

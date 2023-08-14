@@ -13,17 +13,21 @@ local ucm_state = require("ucm.state")
 local utils = require("ucm.utils")
 local debouncer = require("ucm.utils.debouncer")
 local display_items = {{width = 1}, {width = 48}, {remaining = true}}
+local function run(get_fn, name, hash, render_fn)
+  vim.cmd("norm! ggO")
+  return vim.api.nvim_put(render_fn(get_fn(name, hash, ucm_state["get-relative-to"]())), "", false, true)
+end
 local function insert(bufnr, item)
   actions.close(bufnr)
   local _1_ = item
   if ((_G.type(_1_) == "table") and ((_G.type((_1_).namedTerm) == "table") and (nil ~= ((_1_).namedTerm).termName) and (nil ~= ((_1_).namedTerm).termHash))) then
     local name = ((_1_).namedTerm).termName
     local hash = ((_1_).namedTerm).termHash
-    return vim.api.nvim_put(render.term(model["get-term"](name, hash, ucm_state["get-relative-to"]())), "", false, true)
+    return run(model["get-term"], name, hash, render.term)
   elseif ((_G.type(_1_) == "table") and ((_G.type((_1_).namedType) == "table") and (nil ~= ((_1_).namedType).typeName) and (nil ~= ((_1_).namedType).typeHash))) then
     local name = ((_1_).namedType).typeName
     local hash = ((_1_).namedType).typeHash
-    return vim.api.nvim_put(render.type(model["get-type"](name, hash, ucm_state["list-path-get"]())), "", false, true)
+    return run(model["get-type"], name, hash, render.type)
   elseif (nil ~= _1_) then
     local other = _1_
     return utils.notify(other)
@@ -86,10 +90,10 @@ local function async_fn(on_result, on_complete)
   else
   end
   local function _9_(prompt)
-    _G.assert((nil ~= prompt), "Missing argument prompt on /Users/chuwy/workspace/ucm.nvim/fnl/telescope/_extensions/ucm/pickers/find.fnl:63")
+    _G.assert((nil ~= prompt), "Missing argument prompt on /Users/chuwy/workspace/ucm.nvim/fnl/telescope/_extensions/ucm/pickers/find.fnl:67")
     local process_body
     local function _10_(res)
-      _G.assert((nil ~= res), "Missing argument res on /Users/chuwy/workspace/ucm.nvim/fnl/telescope/_extensions/ucm/pickers/find.fnl:64")
+      _G.assert((nil ~= res), "Missing argument res on /Users/chuwy/workspace/ucm.nvim/fnl/telescope/_extensions/ucm/pickers/find.fnl:68")
       for key, value in safe_iterate(res.body) do
         on_result(key, value)
       end
