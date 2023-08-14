@@ -7,6 +7,7 @@
 ;; TODO - if there's only one key-value - get it (e.g. `Any` type)
 
 (fn M.get-term [name hash relative-to]
+  (utils.notify {:name name :hash hash :relative-to relative-to})
   (. (. (http.get-definition name relative-to) :termDefinitions) hash))
 
 (fn M.get-type [name hash relative-to]
