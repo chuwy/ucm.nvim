@@ -19,11 +19,11 @@ local function insert(bufnr, item)
   if ((_G.type(_1_) == "table") and ((_G.type((_1_).namedTerm) == "table") and (nil ~= ((_1_).namedTerm).termName) and (nil ~= ((_1_).namedTerm).termHash))) then
     local name = ((_1_).namedTerm).termName
     local hash = ((_1_).namedTerm).termHash
-    return vim.api.nvim_put(render.term(model["get-term"](name, hash)), "", false, true)
+    return vim.api.nvim_put(render.term(model["get-term"](name, hash, ucm_state["list-path-get"]())), "", false, true)
   elseif ((_G.type(_1_) == "table") and ((_G.type((_1_).namedType) == "table") and (nil ~= ((_1_).namedType).typeName) and (nil ~= ((_1_).namedType).typeHash))) then
     local name = ((_1_).namedType).typeName
     local hash = ((_1_).namedType).typeHash
-    return vim.api.nvim_put(render.type(model["get-type"](name, hash)), "", false, true)
+    return vim.api.nvim_put(render.type(model["get-type"](name, hash, ucm_state["list-path-get"]())), "", false, true)
   elseif (nil ~= _1_) then
     local other = _1_
     return utils.notify(other)

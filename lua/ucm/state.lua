@@ -42,6 +42,13 @@ end
 M["list-path-root?"] = function()
   return (M["list-path"] == {})
 end
+M["get-branch"] = function()
+  if (M["project-branch"] == nil) then
+    return nil
+  else
+    return (M["project-branch"]).branch
+  end
+end
 M["list-path-get"] = function()
   return table.concat(M["list-path"], ".")
 end

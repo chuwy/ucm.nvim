@@ -15,8 +15,8 @@ end
 M["get-type"] = function(hash)
   return request(("definitions/types/by-hash/" .. utils["strip-hash"](hash) .. "/summary"))
 end
-M["get-definition"] = function(fqn)
-  return request("getDefinition", {names = fqn})
+M["get-definition"] = function(fqn, relative_to)
+  return request("getDefinition", {names = fqn, relativeTo = relative_to})
 end
 M.projects = function()
   return request("projects")

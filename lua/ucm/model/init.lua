@@ -2,11 +2,11 @@
 local http = require("ucm.model.http")
 local utils = require("ucm.utils")
 local M = {}
-M["get-term"] = function(name, hash)
-  return ((http["get-definition"](name)).termDefinitions)[hash]
+M["get-term"] = function(name, hash, relative_to)
+  return ((http["get-definition"](name, relative_to)).termDefinitions)[hash]
 end
-M["get-type"] = function(name, hash)
-  local definitions = (http["get-definition"](name)).typeDefinitions
+M["get-type"] = function(name, hash, relative_to)
+  local definitions = (http["get-definition"](name, relative_to)).typeDefinitions
   local function _1_(key)
     _G.assert((nil ~= key), "Missing argument key on /Users/chuwy/workspace/ucm.nvim/fnl/ucm/model/init.fnl:14")
     return utils["starts-with"](key, hash)

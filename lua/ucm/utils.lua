@@ -4,6 +4,17 @@ local M = {}
 M.notify = function(x)
   return require("notify")(vim.inspect(x))
 end
+local function strip_prefix(seg, prefix)
+  if (prefix == nil) then
+    return seg
+  else
+    if M["starts-with"](seg, (prefix .. ".")) then
+      return seg:sub((#prefix + 1))
+    else
+      return seg
+    end
+  end
+end
 M["starts-with"] = function(s, suffix)
   return ((suffix == "") or (s:sub(1, #suffix) == suffix))
 end
