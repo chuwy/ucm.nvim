@@ -16,12 +16,16 @@
 
 (local display-items [ { :width 1 } { :width 48 } {:remaining true} ])
 
+(fn run [get-fn name hash render-fn]
+  (vim.cmd "norm! ggO")
+  (vim.api.nvim_put (render-fn (get-fn name hash (ucm-state.get-relative-to))) "" false true))
+
 (fn insert [bufnr item]
   (actions.close bufnr)
   (match item {:namedTerm {:termName name :termHash hash}}
-                (vim.api.nvim_put (render.term (model.get-term name hash (ucm-state.get-relative-to))) "" false true)
+                (run model.get-term name hash render.term)
               {:namedType {:typeName name :typeHash hash}}
-                (vim.api.nvim_put (render.type (model.get-type name hash (ucm-state.list-path-get))) "" false true)
+                (run model.get-type name hash render.type)
                other (utils.notify other)))
 
 (fn handle [bufnr item] 
