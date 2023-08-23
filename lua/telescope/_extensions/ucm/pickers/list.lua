@@ -15,7 +15,8 @@ local utils = require("ucm.utils")
 local display_items = {{width = 1}, {width = 48}, {remaining = true}}
 local function run(get_fn, name, hash, render_fn)
   vim.cmd("norm! ggO")
-  return vim.api.nvim_put(render_fn(get_fn(name, hash, ucm_state["get-relative-to"]())), "", false, true)
+  local item = get_fn(ucm_state["get-project-branch"](), name, hash)
+  return vim.api.nvim_put(render_fn(item), "", false, true)
 end
 local function insert(bufnr, item)
   actions.close(bufnr)
@@ -78,7 +79,7 @@ M.picker = function(opts)
   local opts0 = (opts or {})
   local get
   local function _7_()
-    return payloads["from-list-root-payload"](http.list(ucm_state["list-path-get"]()))
+    return payloads["from-list-root-payload"](http.list(ucm_state["get-project-branch"](), ucm_state["list-path-get"]()))
   end
   get = _7_
   return pickers.new(opts0, {prompt_title = "Namespaces", finder = finders.new_dynamic({fn = get, entry_maker = entry_maker}), attach_mappings = attach_mappings, sorter = conf.generic_sorter(opts0)})

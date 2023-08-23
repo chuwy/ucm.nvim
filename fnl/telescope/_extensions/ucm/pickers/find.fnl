@@ -18,7 +18,8 @@
 
 (fn run [get-fn name hash render-fn]
   (vim.cmd "norm! ggO")
-  (vim.api.nvim_put (render-fn (get-fn name hash (ucm-state.get-relative-to))) "" false true))
+  (let [item (get-fn (ucm-state.get-project-branch) name hash)]
+    (vim.api.nvim_put (render-fn item) "" false true)))
 
 (fn insert [bufnr item]
   (actions.close bufnr)
@@ -61,14 +62,11 @@
     (ipairs (if success? result []) )))
 
 (fn async-fn [on-result on-complete]
-  (let [relative-to (ucm-state.get-relative-to)]
-    (if (= relative-to nil)
-        (utils.notify "You project/branch are not selected. The search can be very slow. Pick one with `Telescope ucm list`"))
-    (lambda [prompt]
-        (let [process-body (lambda [res] (each [key value (safe-iterate res.body)] (on-result key value)) (on-complete))]
-            (if (< (length prompt) 3)
-                nil
-                (http.find-async prompt (ucm-state.get-relative-to) process-body))))))
+  (lambda [prompt]
+      (let [process-body (lambda [res] (each [key value (safe-iterate res.body)] (on-result key value)) (on-complete))]
+          (if (< (length prompt) 3)
+              nil
+              (http.find-async (ucm-state.get-project-branch) prompt process-body)))))
 
 (fn M.picker [opts]
   (let [opts (or opts {})]
