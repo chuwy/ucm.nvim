@@ -21,6 +21,9 @@ end
 M.projects = function()
   return request("projects")
 end
+M.branches = function(project)
+  return request(("projects/" .. project:gsub("/", "%%2F") .. "/branches"))
+end
 M.list = function(path, relative_to)
   local query
   if str["blank?"](path) then

@@ -5,6 +5,7 @@ local endpoint = require("ucm.utils.endpoint")
 local list = require("telescope._extensions.ucm.pickers.list")
 local find = require("telescope._extensions.ucm.pickers.find")
 local projects = require("telescope._extensions.ucm.pickers.projects")
+local branches = require("telescope._extensions.ucm.pickers.branches")
 local function get_picker(p)
   local popup_open_3f = false
   local function _1_(_3fopts)
@@ -39,4 +40,4 @@ end
 local function _8_()
   return nil
 end
-return telescope.register_extension({setup = _8_, exports = {projects = get_picker(projects.picker), list = get_picker(list.picker), find = get_picker(find.picker)}})
+return telescope.register_extension({setup = _8_, exports = {projects = get_picker(projects.picker), branches = get_picker(branches.picker), list = get_picker(list.picker), find = get_picker(find.picker)}})

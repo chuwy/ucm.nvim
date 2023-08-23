@@ -105,6 +105,10 @@
 
 (fn M.get-project-name [project]
   "Get name of a project served by `/projects` endpoint"
-  (match project {:name name :hash _hash :owner _owner} name))
+  (match project {:projectName name} name))
+
+(fn M.get-branch-name [branch]
+  "Get name of a project served by `/projects/:project/branches` endpoint"
+  (match branch {:branchName name} name))
 
 M
