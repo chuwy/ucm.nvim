@@ -1,57 +1,39 @@
 -- [nfnl] Compiled from fnl/ucm/state.fnl by https://github.com/Olical/nfnl, do not edit.
-local utils = require("ucm.utils")
 local payloads = require("ucm.model.payloads")
-local function parse_project_branch(path)
-  local sliced = vim.list_slice(utils["split-string"](path, "."), 1, 4)
-  local _1_ = sliced
-  if ((_G.type(_1_) == "table") and ((_1_)[1] == "__projects") and (nil ~= (_1_)[2]) and ((_1_)[3] == "branches") and (nil ~= (_1_)[4])) then
-    local project = (_1_)[2]
-    local branch = (_1_)[4]
-    return {project = project, branch = branch}
-  elseif ((_G.type(_1_) == "table") and ((_1_)[1] == "__projects") and (nil ~= (_1_)[2]) and ((_1_)[3] == "branches")) then
-    local project = (_1_)[2]
-    return {project = project, branch = nil}
-  elseif ((_G.type(_1_) == "table") and ((_1_)[1] == "__projects") and (nil ~= (_1_)[2])) then
-    local project = (_1_)[2]
-    return {project = project, branch = nil}
-  elseif true then
-    local _ = _1_
-    return {project = nil, branch = nil}
-  else
-    return nil
-  end
-end
 local M = {}
 M["list-path"] = {}
 M["project-branch"] = {}
 M["get-relative-to"] = function()
-  local _3_ = M["project-branch"]
-  if ((_G.type(_3_) == "table") and ((_3_).project == nil) and ((_3_).branch == nil)) then
+  local _1_ = M["project-branch"]
+  if ((_G.type(_1_) == "table") and ((_1_).project == nil) and ((_1_).branch == nil)) then
     return nil
-  elseif ((_G.type(_3_) == "table") and (nil ~= (_3_).project) and ((_3_).branch == nil)) then
-    local project = (_3_).project
+  elseif ((_G.type(_1_) == "table") and (nil ~= (_1_).project) and ((_1_).branch == nil)) then
+    local project = (_1_).project
     return ("__projects." .. project)
-  elseif ((_G.type(_3_) == "table") and (nil ~= (_3_).project) and (nil ~= (_3_).branch)) then
-    local project = (_3_).project
-    local branch = (_3_).branch
+  elseif ((_G.type(_1_) == "table") and (nil ~= (_1_).project) and (nil ~= (_1_).branch)) then
+    local project = (_1_).project
+    local branch = (_1_).branch
     return ("__projects." .. project .. ".branches." .. branch)
   else
     return nil
   end
 end
+M["get-project-branch"] = function()
+  return M["project-branch"]
+end
 M["list-path-root?"] = function()
   return (M["list-path"] == {})
 end
 M["get-project-branch-path"] = function()
-  local _5_ = M["project-branch"]
-  if ((_G.type(_5_) == "table") and ((_5_).project == nil) and ((_5_).branch == nil)) then
+  local _3_ = M["project-branch"]
+  if ((_G.type(_3_) == "table") and ((_3_).project == nil) and ((_3_).branch == nil)) then
     return nil
-  elseif ((_G.type(_5_) == "table") and (nil ~= (_5_).project) and ((_5_).branch == nil)) then
-    local project = (_5_).project
+  elseif ((_G.type(_3_) == "table") and (nil ~= (_3_).project) and ((_3_).branch == nil)) then
+    local project = (_3_).project
     return project
-  elseif ((_G.type(_5_) == "table") and (nil ~= (_5_).project) and (nil ~= (_5_).branch)) then
-    local project = (_5_).project
-    local branch = (_5_).branch
+  elseif ((_G.type(_3_) == "table") and (nil ~= (_3_).project) and (nil ~= (_3_).branch)) then
+    local project = (_3_).project
+    local branch = (_3_).branch
     return (project .. "/" .. branch)
   else
     return nil
@@ -72,12 +54,22 @@ M["get-branch"] = function()
   end
 end
 M["set-project"] = function(project_name)
-  M["project-branch"] = {project = project_name, branch = nil}
-  return nil
+  if (project_name ~= M["get-project"]()) then
+    M["project-branch"] = {project = project_name, branch = nil}
+    M["list-path"] = {}
+    return nil
+  else
+    return nil
+  end
 end
 M["set-branch"] = function(branch_name)
-  M["project-branch"].branch = branch_name
-  return nil
+  if (branch_name ~= M["get-branch"]()) then
+    M["project-branch"].branch = branch_name
+    M["list-path"] = {}
+    return nil
+  else
+    return nil
+  end
 end
 M["list-path-get"] = function()
   return table.concat(M["list-path"], ".")
@@ -89,15 +81,13 @@ M["set-path"] = function(selection)
   local value = selection.value
   local name = payloads["get-list-entry-name"](value)
   if (name == "..") then
-    table.remove(M["list-path"])
+    return table.remove(M["list-path"])
   else
     if (M["list-path"] ~= {}) then
-      table.insert(M["list-path"], name)
+      return table.insert(M["list-path"], name)
     else
+      return nil
     end
   end
-  local project_branch = parse_project_branch(M["list-path-get"]())
-  M["project-branch"] = project_branch
-  return nil
 end
 return M

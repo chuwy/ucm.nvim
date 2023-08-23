@@ -18,7 +18,8 @@
 
 (fn run [get-fn name hash render-fn]
   (vim.cmd "norm! ggO")
-  (vim.api.nvim_put (render-fn (get-fn name hash (ucm-state.get-relative-to))) "" false true))
+  (let [item (get-fn (ucm-state.get-project-branch) name hash)]
+    (vim.api.nvim_put (render-fn item) "" false true)))
 
 (fn insert [bufnr item]
   (actions.close bufnr)
@@ -59,7 +60,7 @@
 
 (fn M.picker [opts]
   (let [opts (or opts {})
-        get (lambda [] (payloads.from-list-root-payload (http.list (ucm-state.list-path-get))))]
+        get (lambda [] (payloads.from-list-root-payload (http.list (ucm-state.get-project-branch) (ucm-state.list-path-get))))]
        (pickers.new opts {:prompt_title "Namespaces"
                           :finder (finders.new_dynamic { :fn get :entry_maker entry-maker })
                           :attach_mappings attach-mappings

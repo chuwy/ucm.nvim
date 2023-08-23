@@ -15,7 +15,8 @@ local debouncer = require("ucm.utils.debouncer")
 local display_items = {{width = 1}, {width = 48}, {remaining = true}}
 local function run(get_fn, name, hash, render_fn)
   vim.cmd("norm! ggO")
-  return vim.api.nvim_put(render_fn(get_fn(name, hash, ucm_state["get-relative-to"]())), "", false, true)
+  local item = get_fn(ucm_state["get-project-branch"](), name, hash)
+  return vim.api.nvim_put(render_fn(item), "", false, true)
 end
 local function insert(bufnr, item)
   actions.close(bufnr)
@@ -84,29 +85,24 @@ local function safe_iterate(body)
   return ipairs(_7_())
 end
 local function async_fn(on_result, on_complete)
-  local relative_to = ucm_state["get-relative-to"]()
-  if (relative_to == nil) then
-    utils.notify("You project/branch are not selected. The search can be very slow. Pick one with `Telescope ucm list`")
-  else
-  end
-  local function _9_(prompt)
-    _G.assert((nil ~= prompt), "Missing argument prompt on /Users/chuwy/workspace/ucm.nvim/fnl/telescope/_extensions/ucm/pickers/find.fnl:67")
+  local function _8_(prompt)
+    _G.assert((nil ~= prompt), "Missing argument prompt on /Users/chuwy/workspace/ucm.nvim/fnl/telescope/_extensions/ucm/pickers/find.fnl:65")
     local process_body
-    local function _10_(res)
-      _G.assert((nil ~= res), "Missing argument res on /Users/chuwy/workspace/ucm.nvim/fnl/telescope/_extensions/ucm/pickers/find.fnl:68")
+    local function _9_(res)
+      _G.assert((nil ~= res), "Missing argument res on /Users/chuwy/workspace/ucm.nvim/fnl/telescope/_extensions/ucm/pickers/find.fnl:66")
       for key, value in safe_iterate(res.body) do
         on_result(key, value)
       end
       return on_complete()
     end
-    process_body = _10_
+    process_body = _9_
     if (#prompt < 3) then
       return nil
     else
-      return http["find-async"](prompt, ucm_state["get-relative-to"](), process_body)
+      return http["find-async"](ucm_state["get-project-branch"](), prompt, process_body)
     end
   end
-  return _9_
+  return _8_
 end
 M.picker = function(opts)
   local opts0 = (opts or {})

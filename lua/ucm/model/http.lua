@@ -4,6 +4,22 @@ local curl = require("plenary.curl")
 local utils = require("ucm.utils")
 local endpoint = require("ucm.utils.endpoint")
 local M = {}
+local function url_encoded(project_or_branch)
+  return project_or_branch:gsub("/", "%%2F")
+end
+local function get_service(root, service)
+  local _1_ = root
+  if ((_G.type(_1_) == "table") and (nil ~= (_1_).project) and (nil ~= (_1_).branch)) then
+    local project = (_1_).project
+    local branch = (_1_).branch
+    return ("projects/" .. url_encoded(project) .. "/branches/" .. url_encoded(branch) .. "/" .. service)
+  elseif true then
+    local _ = _1_
+    return utils.notify({msg = "get-service called without proper root (you need to pick a project and a branch)", root = root, service = service})
+  else
+    return nil
+  end
+end
 local function request(service, q)
   local url = (endpoint.get() .. service)
   local res = curl.get(url, {query = q})
@@ -15,23 +31,23 @@ end
 M["get-type"] = function(hash)
   return request(("definitions/types/by-hash/" .. utils["strip-hash"](hash) .. "/summary"))
 end
-M["get-definition"] = function(fqn, relative_to)
-  return request("getDefinition", {names = fqn, relativeTo = relative_to})
+M["get-definition"] = function(root, fqn, relative_to)
+  return request(get_service(root, "getDefinition"), {names = fqn, relativeTo = relative_to})
 end
 M.projects = function()
   return request("projects")
 end
 M.branches = function(project)
-  return request(("projects/" .. project:gsub("/", "%%2F") .. "/branches"))
+  return request(("projects/" .. url_encoded(project) .. "/branches"))
 end
-M.list = function(path, relative_to)
+M.list = function(root, path)
   local query
   if str["blank?"](path) then
     query = nil
   else
-    query = {namespace = path, relativeTo = relative_to}
+    query = {namespace = path}
   end
-  return request("list", query)
+  return request(get_service(root, "list"), query)
 end
 M.find = function(query)
   return request("find", {query = query})
@@ -39,7 +55,7 @@ end
 local function request_async(service, q, callback)
   return curl.get((endpoint.get() .. service), {query = q, callback = callback, raw = {"--max-time", 10}})
 end
-M["find-async"] = function(query, relative_to, callback)
-  return request_async("find", {query = query, relativeTo = relative_to}, callback)
+M["find-async"] = function(root, query, callback)
+  return request_async(get_service(root, "find"), {query = query}, callback)
 end
 return M
