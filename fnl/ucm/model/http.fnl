@@ -23,6 +23,8 @@
 
 (fn M.projects []
   (request :projects))
+(fn M.branches [project]
+  (request (.. "projects/" (project:gsub "/" "%%2F") "/branches")))
 
 (fn M.list [path relative-to]
   (let [query (if (str.blank? path) nil { :namespace path :relativeTo relative-to })]

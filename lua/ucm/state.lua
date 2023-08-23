@@ -42,12 +42,42 @@ end
 M["list-path-root?"] = function()
   return (M["list-path"] == {})
 end
+M["get-project-branch-path"] = function()
+  local _5_ = M["project-branch"]
+  if ((_G.type(_5_) == "table") and ((_5_).project == nil) and ((_5_).branch == nil)) then
+    return nil
+  elseif ((_G.type(_5_) == "table") and (nil ~= (_5_).project) and ((_5_).branch == nil)) then
+    local project = (_5_).project
+    return project
+  elseif ((_G.type(_5_) == "table") and (nil ~= (_5_).project) and (nil ~= (_5_).branch)) then
+    local project = (_5_).project
+    local branch = (_5_).branch
+    return (project .. "/" .. branch)
+  else
+    return nil
+  end
+end
+M["get-project"] = function()
+  if (M["project-branch"] == nil) then
+    return nil
+  else
+    return (M["project-branch"]).project
+  end
+end
 M["get-branch"] = function()
   if (M["project-branch"] == nil) then
     return nil
   else
     return (M["project-branch"]).branch
   end
+end
+M["set-project"] = function(project_name)
+  M["project-branch"] = {project = project_name, branch = nil}
+  return nil
+end
+M["set-branch"] = function(branch_name)
+  M["project-branch"].branch = branch_name
+  return nil
 end
 M["list-path-get"] = function()
   return table.concat(M["list-path"], ".")

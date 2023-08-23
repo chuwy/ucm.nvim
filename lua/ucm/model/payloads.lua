@@ -127,10 +127,17 @@ M["get-list-entry-name"] = function(entry)
 end
 M["get-project-name"] = function(project)
   local _12_ = project
-  if ((_G.type(_12_) == "table") and (nil ~= (_12_).name) and true and true) then
-    local name = (_12_).name
-    local _hash = (_12_).hash
-    local _owner = (_12_).owner
+  if ((_G.type(_12_) == "table") and (nil ~= (_12_).projectName)) then
+    local name = (_12_).projectName
+    return name
+  else
+    return nil
+  end
+end
+M["get-branch-name"] = function(branch)
+  local _14_ = branch
+  if ((_G.type(_14_) == "table") and (nil ~= (_14_).branchName)) then
+    local name = (_14_).branchName
     return name
   else
     return nil

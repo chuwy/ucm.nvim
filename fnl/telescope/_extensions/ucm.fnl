@@ -7,6 +7,7 @@
 (local list      (require :telescope._extensions.ucm.pickers.list))
 (local find      (require :telescope._extensions.ucm.pickers.find))
 (local projects  (require :telescope._extensions.ucm.pickers.projects))
+(local branches  (require :telescope._extensions.ucm.pickers.branches))
 
 
 ; TODO we should also keep track somewhere if it's valid
@@ -29,6 +30,7 @@
 (telescope.register_extension { :setup (lambda [] nil)
                                 :exports {
                                   :projects (get-picker projects.picker)
+                                  :branches (get-picker branches.picker)
                                   :list     (get-picker list.picker)
                                   :find     (get-picker find.picker)
                                 }
