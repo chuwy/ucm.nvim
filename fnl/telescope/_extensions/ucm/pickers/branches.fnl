@@ -4,6 +4,7 @@
 (local finders       (require :telescope.finders))
 (local conf       (. (require :telescope.config) :values))
 
+(local ucm        (require :ucm))
 (local ucm-state  (require :ucm.state))
 (local utils      (require :ucm.utils))
 (local http       (require :ucm.model.http))
@@ -17,6 +18,7 @@
                                                 branch    (payloads.get-branch-name (. selection :value))]
                                               (do (actions.close bufnr)
                                                   (ucm-state.set-branch branch)
+                                                  (ucm.save-state)
                                                   (utils.notify (.. "Working on " (ucm-state.get-project-branch-path)))))))
       true))
 
