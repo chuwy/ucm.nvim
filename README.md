@@ -30,17 +30,17 @@ which you can get with `api` command inside `ucm`. Or you can just use a static 
 $ ucm --port 6783 --token local_ucm
 ```
 
+This plugin works with ucm M5d and later.
+
 ## Usage
 
-This plugin exposes two [Telescope](https://github.com/nvim-telescope/telescope.nvim) pickers:
+This plugin exposes three [Telescope](https://github.com/nvim-telescope/telescope.nvim) pickers:
 
+- `:Telescope ucm projects` - this is the first picker you need to use, it allows you to specify a project and a branch. The will be saved for later, but bear in mind that your ucm might have a different opinion on a chosed project/branch pair
 - `:Telescope ucm list` - here you can navigate Unison namespaces like it's a usual filesystem
 - `:Telescope ucm find` - allows you to find terms and types by name as you type
 
-Both pickers insert an entity to edit if you press Return.
-
-It is recommended to invoke `list` first, because it help `ucm.nvim` to find out what project you're working with.
-All subsequent `find`s will be working within the project/branch you've selected with `list`.
+Two latter pickers insert an entity to edit if you press Return.
 
 ## FAQ
 
@@ -49,6 +49,6 @@ All subsequent `find`s will be working within the project/branch you've selected
 Doing most of the things the plugin does currently is _likely_ possible via LSP. But at the same time, ucm.nvim is planned to be much
 more than just an "interactive symbol viewer" - I plan to add many features (such as adding terms and types, creating and switching projects etc) that are simply out of scope of LSP.
 
-### Why project and branches have so weird names?
+### ucm and ucm.nvim show me different projects
 
-This is an ucm issue (the projects are a new concept) which the team is currently working on ([a relevant PR](https://github.com/unisonweb/unison/pull/4250)). ucm.nvim will embrace the changes as soon stable ucm with pretty projects is out.
+That's because running ucm instance does not provide info about project you're currently working on. Instead `Telescope ucm project` just picks a scope for search.
